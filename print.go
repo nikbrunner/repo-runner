@@ -18,7 +18,7 @@ func printInfo(message string) {
 	fmt.Printf("%s%s%s\n", colorBlue, message, colorReset)
 }
 
-func printNegative(message string, err *error) {
+func printNegative(message string, err error) {
 	fmt.Printf("%s%s%s\n", colorRed, message, colorReset)
 	if err != nil {
 		fmt.Println(err)

@@ -6,8 +6,8 @@ import (
 )
 
 type Config struct {
-	RepoPath  string `json:"repoPath"`
-	Separator string `json:"separator"`
+	ReposBasePath string `json:"reposBasePath"`
+	Separator     string `json:"separator"`
 }
 
 func main() {

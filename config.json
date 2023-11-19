@@ -1,4 +1,4 @@
 {
-  "repoPath": "$HOME/Documents/dev/repos_test",
+  "reposBasePath": "$HOME/Documents/dev/repos_test",
   "separator": "@"
 }
