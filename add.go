@@ -11,6 +11,14 @@ func isSshUrl(url string) bool {
 	return strings.Contains(url, "git@")
 }
 
+func isHttpUrl(url string) bool {
+	return strings.Contains(url, "http://") || strings.Contains(url, "https://")
+}
+
+func isValidGitUrl(url string) bool {
+	return isSshUrl(url) || isHttpUrl(url)
+}
+
 func parseGitUrl(gitUrl string) (string, string, error) {
 	gitUrl = strings.TrimSuffix(gitUrl, ".git")
 
@@ -18,13 +26,11 @@ func parseGitUrl(gitUrl string) (string, string, error) {
 
 	if isSshUrl(gitUrl) {
 		parts = strings.Split(gitUrl, ":")
-		if len(parts) < 2 {
-			return "", "", fmt.Errorf("invalid Git Url")
-		}
-
 		parts = strings.Split(parts[1], "/")
-	} else { // Assume HTTP/HTTPS format
+	} else if isHttpUrl(gitUrl) {
 		parts = strings.Split(gitUrl, "/")
+	} else {
+		return "", "", fmt.Errorf("invalid Git Url")
 	}
 
 	if len(parts) < 2 {
@@ -45,24 +51,36 @@ func directoryExists(path string) bool {
 	return info.IsDir()
 }
 
-func cloneRepo(gitUrl string, config Config) {
-	// Parsing the Git URL to get username and repo name
+func getClonePath(gitUrl string, config Config) string {
+	if !isValidGitUrl(gitUrl) {
+		printNegative("Invalid Git URL", nil)
+		return ""
+	}
+
 	username, repoName, err := parseGitUrl(gitUrl)
 	if err != nil {
 		printNegative("Error parsing Git URL", err)
 	}
 
-	fullPath := fmt.Sprintf("%s/%s%s%s", config.ReposBasePath, username, config.Separator, repoName)
+	clonePath := fmt.Sprintf("%s/%s%s%s", config.ReposBasePath, username, config.Separator, repoName)
 
-	if directoryExists(fullPath) {
+	return clonePath
+}
+
+func cloneRepo(gitUrl string, config Config) {
+	clonePath := getClonePath(gitUrl, config)
+
+	if directoryExists(clonePath) {
 		printNegative("Directory already exists!", nil)
 		return
 	}
 
-	printPositive("Cloning repostitory to " + fullPath)
+	printPositive("Cloning repository...")
 
-	cmd := exec.Command("git", "clone", gitUrl, fullPath)
-	cmd.Stderr = os.Stderr // This will print any error output from the git command
+	var err error
+
+	cmd := exec.Command("git", "clone", gitUrl, clonePath)
+	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		printNegative("Error cloning repository:", err)
