@@ -11,6 +11,12 @@ type Config struct {
 }
 
 func main() {
+	config, err := loadConfig()
+	if err != nil {
+		fmt.Println("Failed to load configuration: ", err)
+		os.Exit(1)
+	}
+
 	if len(os.Args) < 2 {
 		getHelp()
 		return
@@ -18,9 +24,9 @@ func main() {
 
 	switch os.Args[1] {
 	case "--open":
-		openRepo()
+		openRepo(config)
 	case "--add":
-		cloneRepo(os.Args[2])
+		cloneRepo(os.Args[2], config)
 	case "--remove":
 		removeRepo()
 	case "--status":

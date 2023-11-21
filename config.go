@@ -7,24 +7,32 @@ import (
 	"strings"
 )
 
-func loadConfig() Config {
+const defaultSeparator = "@"
+
+func loadConfig() (Config, error) {
 	file, err := os.Open("config.json")
 	if err != nil {
-		fmt.Println("Error opening config file: ", err)
-		os.Exit(1)
+		return Config{}, fmt.Errorf("error opening config file: %w", err)
 	}
 	defer file.Close()
 
+	var config Config
 	decoder := json.NewDecoder(file)
-	config := Config{}
-	err = decoder.Decode(&config)
-
-	if err != nil {
-		fmt.Println("Error decoding config file: ", err)
-		os.Exit(1)
+	if err := decoder.Decode(&config); err != nil {
+		return Config{}, fmt.Errorf("error decoding config file: %w", err)
 	}
 
-	return config
+	// Validate and set defaults
+	config.ReposBasePath = expandPath(config.ReposBasePath)
+	if config.ReposBasePath == "" {
+		return Config{}, fmt.Errorf("repository base path is not set")
+	}
+
+	if config.Separator == "" {
+		config.Separator = defaultSeparator
+	}
+
+	return config, nil
 }
 
 func expandPath(path string) string {

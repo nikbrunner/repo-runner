@@ -45,27 +45,14 @@ func directoryExists(path string) bool {
 	return info.IsDir()
 }
 
-func cloneRepo(gitUrl string) {
-	config := loadConfig()
-
-	reposBasePath := expandPath(config.ReposBasePath)
-	if reposBasePath == "" {
-		printNegative("Error getting base path", nil)
-		return
-	}
-
-	separator := config.Separator
-	if separator == "" {
-		separator = "@"
-	}
-
+func cloneRepo(gitUrl string, config Config) {
 	// Parsing the Git URL to get username and repo name
 	username, repoName, err := parseGitUrl(gitUrl)
 	if err != nil {
 		printNegative("Error parsing Git URL", err)
 	}
 
-	fullPath := fmt.Sprintf("%s/%s%s%s", reposBasePath, username, separator, repoName)
+	fullPath := fmt.Sprintf("%s/%s%s%s", config.ReposBasePath, username, config.Separator, repoName)
 
 	if directoryExists(fullPath) {
 		printNegative("Directory already exists!", nil)
