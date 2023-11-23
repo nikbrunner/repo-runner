@@ -11,15 +11,15 @@ const (
 )
 
 func printPositive(message string) {
-	fmt.Printf("%s%s%s\n", colorGreen, message, colorReset)
+	fmt.Printf("✅ %s%s%s\n", colorGreen, message, colorReset)
 }
 
 func printInfo(message string) {
-	fmt.Printf("%s%s%s\n", colorBlue, message, colorReset)
+	fmt.Printf("ℹ️ %s%s%s\n", colorBlue, message, colorReset)
 }
 
 func printNegative(message string, err error) {
-	fmt.Printf("%s%s%s\n", colorRed, message, colorReset)
+	fmt.Printf("❌ %s%s%s\n", colorRed, message, colorReset)
 	if err != nil {
 		fmt.Println(err)
 	}

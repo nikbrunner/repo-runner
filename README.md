@@ -1,4 +1,4 @@
-# Repo-Runner
+# tmux-repo-runner
 
 Repo-Runner is a CLI tool for managing Git repositories in combination with TMUX.
 
@@ -12,8 +12,16 @@ Repo-Runner is a CLI tool for managing Git repositories in combination with TMUX
 
 To add a new repository:
 
+Add a repository to the list of repositories to be managed by Repo-Runner.
+
+```sh
+rr --add <git-repo-url>
 ```
-./rr --add <git-repo-url>
+
+Open the repository in a new TMUX session.
+
+```sh
+rr run . --open
 ```
 
 This command clones the given Git repository to the specified directory.
@@ -30,19 +38,20 @@ This command clones the given Git repository to the specified directory.
 
 Basic
 
-- [ ] `add`
-- [ ] `open`
+- [x] `add`
+- [x] `open`
+- [ ] `dotfiles`
 - [ ] `remove`
 - [ ] `status`
 - [ ] `help`
-- [ ] `dotfiles`
 
 Advanced
 
-- [ ] `config` in `~/.config/reporunner/config.json/toml` & Default Config
+- [ ] config: Make layout for `run` configurable
+- [ ] config: User `config` in `~/.config/reporunner/config.json/toml` & Default Config
 - [ ] Package and global install
 
 Extra
 
 - [ ] Add TUI
-- [charmbracelet/bubbles: TUI components for Bubble Tea 🫧](https://github.com/charmbracelet/bubbles/tree/master)
+  - [charmbracelet/bubbles: TUI components for Bubble Tea 🫧](https://github.com/charmbracelet/bubbles/tree/master)
