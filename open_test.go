@@ -39,7 +39,7 @@ func TestCreateSesssionName(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		gotString := createSessionName(config, tc.repoPath)
+		gotString := createSessionName(config.Separator, tc.repoPath)
 		if gotString != tc.wantSessionName {
 			t.Errorf("createSessionName(%s): expected: %v, got: %v", tc.repoPath, tc.wantSessionName, gotString)
 		}
