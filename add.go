@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -77,12 +76,7 @@ func cloneRepo(gitUrl string, config Config) {
 
 	printPositive("Cloning repository...")
 
-	var err error
-
-	cmd := exec.Command("git", "clone", gitUrl, clonePath)
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	if err != nil {
+	if err := git("clone", gitUrl, clonePath); err != nil {
 		printNegative("Error cloning repository:", err)
 		return
 	}
