@@ -66,7 +66,7 @@ func getClonePath(gitUrl string, config Config) string {
 	return clonePath
 }
 
-func cloneRepo(gitUrl string, config Config) {
+func cloneRepo(config Config, gitUrl string) {
 	clonePath := getClonePath(gitUrl, config)
 
 	if directoryExists(clonePath) {

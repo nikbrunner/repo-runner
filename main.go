@@ -26,7 +26,7 @@ func main() {
 	case "--open":
 		openRepo(config)
 	case "--add":
-		cloneRepo(os.Args[2], config)
+		cloneRepo(config, os.Args[2])
 	case "--remove":
 		removeRepo()
 	case "--status":
