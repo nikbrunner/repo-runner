@@ -7,7 +7,21 @@ import (
 )
 
 func fzf(list []string, prompt string) string {
-	args := []string{"--height", "50%", "--reverse", "--border", "--prompt", prompt}
+	// Define the color scheme (See tmux manual for --color)
+	colorScheme := "fg:white,fg+:yellow,bg+:-1,gutter:-1,hl+:magenta,border:yellow,prompt:cyan,pointer:yellow,marker:cyan,spinner:green,header:blue,label:yellow,query:magenta"
+
+	args := []string{
+		"--reverse",
+		"--no-separator",
+		"--no-info",
+		"--no-scrollbar",
+		"--border=bold",
+		"--border-label=┃   repo-runner ┃",
+		"--border-label-pos=3",
+		"--prompt", prompt,
+		"--padding", "1,5",
+		"--color", colorScheme,
+	}
 
 	cmd := exec.Command("fzf", args...)
 
