@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func tmux(args ...string) {
+func tmux(args ...string) error {
 	// exec.Command creates a new process to run the tmux command with the provided arguments.
 	cmd := exec.Command("tmux", args...)
 
@@ -18,38 +18,51 @@ func tmux(args ...string) {
 	cmd.Stdin = os.Stdin
 
 	// cmd.Stdout and cmd.Stderr are set to the standard output and standard error of the Go program.
-	// This means that any output or errors from the tmux command will be shown in the terminal
-	// where the Go program is running. It ensures that you can see what tmux is doing or any errors it encounters.
+	// This means that any output or errors from the tmux command will be shown in the terminal where the Go program is running. It ensures that you can see what tmux is doing or any errors it encounters.
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	// cmd.Run() starts the tmux command and waits for it to finish.
-	// If there's an error in starting or running the command, it's handled here.
-	if err := cmd.Run(); err != nil {
-		printNegative("Error running tmux:", err)
-		os.Exit(1)
-	}
+	return cmd.Run()
 }
 
 func doesSessionExist(sessionName string) bool {
-	// TODO: use tmux() func
-	cmd := exec.Command("tmux", "has-session", "-t", sessionName)
-	if err := cmd.Run(); err != nil {
+	err := tmux("has-session", "-t", sessionName)
+	if err != nil {
 		return false
+	} else {
+		return true
 	}
-	return true
 }
 
 func createSession(sessionName, path string) {
-	tmux("new-session", "-d", "-s", sessionName, "-c", path)
-	tmux("rename-window", "-t", fmt.Sprintf("%s:1", sessionName), "code")
-	tmux("new-window", "-t", sessionName)
-	tmux("rename-window", "-t", fmt.Sprintf("%s:2", sessionName), "run")
-	tmux("send-keys", "-t", fmt.Sprintf("%s:2", sessionName), "tmux_2x2_layout", "Enter")
+	if err := tmux("new-session", "-d", "-s", sessionName, "-c", path); err != nil {
+		printNegative("Error creating new tmux session:", err)
+		return
+	}
+	if err := tmux("rename-window", "-t", fmt.Sprintf("%s:1", sessionName), "code"); err != nil {
+		printNegative("Error renaming tmux window to 'code':", err)
+		return
+	}
+	if err := tmux("new-window", "-t", sessionName); err != nil {
+		printNegative("Error creating new tmux window:", err)
+		return
+	}
+	if err := tmux("rename-window", "-t", fmt.Sprintf("%s:2", sessionName), "run"); err != nil {
+		printNegative("Error renaming tmux window to 'run':", err)
+		return
+	}
+	if err := tmux("send-keys", "-t", fmt.Sprintf("%s:2", sessionName), "tmux_2x2_layout", "Enter"); err != nil {
+		printNegative("Error setting up layout:", err)
+		return
+	}
 
-	// Wait for tmux to create layout, and select the first window
+	// Wait for tmux to create the layout and select the first window
 	time.Sleep(2 * time.Second)
-	tmux("select-window", "-t", fmt.Sprintf("%s:1", sessionName))
+	if err := tmux("select-window", "-t", fmt.Sprintf("%s:1", sessionName)); err != nil {
+		printNegative("Error selecting first tmux window:", err)
+		return
+	}
 
 	printPositive("Session created")
 }
@@ -59,9 +72,13 @@ func attachToSession(sessionName string, sessionPath string) {
 
 	if doesSessionExist(sessionName) {
 		if inTmux {
-			tmux("switch-client", "-t", sessionName)
+			if err := tmux("switch-client", "-t", sessionName); err != nil {
+				printNegative("Error switching to tmux session:", err)
+			}
 		} else {
-			tmux("attach-session", "-t", sessionName)
+			if err := tmux("attach-session", "-t", sessionName); err != nil {
+				printNegative("Error attaching to tmux session:", err)
+			}
 		}
 	} else {
 		printPositive("Creating session")
@@ -69,10 +86,14 @@ func attachToSession(sessionName string, sessionPath string) {
 
 		if inTmux {
 			printPositive("Switching to session")
-			tmux("switch-client", "-t", sessionName)
+			if err := tmux("switch-client", "-t", sessionName); err != nil {
+				printNegative("Error switching to tmux session:", err)
+			}
 		} else {
 			printPositive("Attaching to session")
-			tmux("attach-session", "-t", sessionName)
+			if err := tmux("attach-session", "-t", sessionName); err != nil {
+				printNegative("Error attaching to tmux session:", err)
+			}
 		}
 	}
 }
