@@ -28,7 +28,7 @@ func main() {
 	case "--add":
 		cloneRepo(config, os.Args[2])
 	case "--remove":
-		removeRepo()
+		removeRepo(config)
 	case "--status":
 		getStatus()
 	case "--help":

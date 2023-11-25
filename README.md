@@ -24,6 +24,13 @@ Open the repository in a new TMUX session.
 rr run . --open
 ```
 
+Remove a repository from the list of repositories to be managed by `repo-runner`.
+This will let you pick a repository from the list of repositories to be managed by `repo-runner` to be removed.
+
+```sh
+rr --remove
+```
+
 This command clones the given Git repository to the specified directory.
 
 ## Contributing
@@ -40,7 +47,7 @@ Basic
 
 - [x] `add`
 - [x] `open`
-- [ ] `remove`
+- [x] `remove`
 - [ ] `status`
 - [ ] `help`
 
