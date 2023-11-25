@@ -5,11 +5,6 @@ import (
 	"os"
 )
 
-type Config struct {
-	ReposBasePath string `json:"reposBasePath"`
-	Separator     string `json:"separator"`
-}
-
 func main() {
 	config, err := loadConfig()
 	if err != nil {

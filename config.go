@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type Config struct {
+	ReposBasePath string `json:"reposBasePath"`
+	Separator     string `json:"separator"`
+}
+
 const defaultSeparator = "@"
 
 func loadConfig() (Config, error) {
