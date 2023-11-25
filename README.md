@@ -13,10 +13,13 @@
 To add a new repository:
 
 Add a repository to the list of repositories to be managed by `repo-runner`.
+This command clones the given Git repository to the specified directory.
 
 ```sh
 rr --add <git-repo-url>
 ```
+
+### Opening a Repository
 
 Open the repository in a new TMUX session.
 This will let you pick a repository from the list of repositories to be managed by `repo-runner` to be opened in a new TMUX session.
@@ -25,6 +28,8 @@ This will let you pick a repository from the list of repositories to be managed 
 rr run . --open
 ```
 
+### Removing a Repository
+
 Remove a repository from the list of repositories to be managed by `repo-runner`.
 This will let you pick a repository from the list of repositories to be managed by `repo-runner` to be removed.
 
@@ -32,7 +37,21 @@ This will let you pick a repository from the list of repositories to be managed 
 rr --remove
 ```
 
-This command clones the given Git repository to the specified directory.
+### Status
+
+Show the status of all repositories managed by `repo-runner`.
+
+```sh
+rr --status
+```
+
+### Show Help
+
+Lists all available commands and flags.
+
+```sh
+rr --help
+```
 
 ## Contributing
 
@@ -50,7 +69,7 @@ Basic
 - [x] `open`
 - [x] `remove`
 - [ ] `status`
-- [ ] `help`
+- [x] `help`
 
 Advanced
 
