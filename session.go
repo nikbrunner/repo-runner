@@ -33,6 +33,7 @@ func createSessionPath(basePath, repoName string) string {
 
 func sessionExists(sessionName string) bool {
 	err := tmux("has-session", "-t", sessionName)
+	printPositive(fmt.Sprintf("Session found: %s", sessionName))
 	if err != nil {
 		return false
 	} else {
@@ -52,5 +53,5 @@ func createSession(config Config, sessionName string, sessionPath string) {
 		return
 	}
 
-	printPositive("Session created")
+	printPositive(fmt.Sprintf("Created session: %s", sessionName))
 }
