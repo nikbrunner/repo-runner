@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 )
@@ -42,6 +41,8 @@ func sessionExists(sessionName string) bool {
 }
 
 func createSession(sessionName, path string) {
+	printPositive(fmt.Sprintf("Creating session: %s", sessionName))
+
 	if err := tmux("new-session", "-d", "-s", sessionName, "-c", path); err != nil {
 		printNegative("Error creating new tmux session:", err)
 		return
@@ -68,38 +69,5 @@ func createSession(sessionName, path string) {
 	if err := tmux("select-window", "-t", fmt.Sprintf("%s:1", sessionName)); err != nil {
 		printNegative("Error selecting first tmux window:", err)
 		return
-	}
-
-	printPositive("Session created")
-}
-
-func attachToSession(sessionName string, sessionPath string) {
-	inTmux := os.Getenv("TMUX") != ""
-
-	if sessionExists(sessionName) {
-		if inTmux {
-			if err := tmux("switch-client", "-t", sessionName); err != nil {
-				printNegative("Error switching to tmux session:", err)
-			}
-		} else {
-			if err := tmux("attach-session", "-t", sessionName); err != nil {
-				printNegative("Error attaching to tmux session:", err)
-			}
-		}
-	} else {
-		printPositive("Creating session")
-		createSession(sessionName, sessionPath)
-
-		if inTmux {
-			printPositive("Switching to session")
-			if err := tmux("switch-client", "-t", sessionName); err != nil {
-				printNegative("Error switching to tmux session:", err)
-			}
-		} else {
-			printPositive("Attaching to session")
-			if err := tmux("attach-session", "-t", sessionName); err != nil {
-				printNegative("Error attaching to tmux session:", err)
-			}
-		}
 	}
 }
