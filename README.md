@@ -40,14 +40,13 @@ Basic
 
 - [x] `add`
 - [x] `open`
-- [ ] `dotfiles`
 - [ ] `remove`
 - [ ] `status`
 - [ ] `help`
 
 Advanced
 
-- [ ] config: Make layout for `run` configurable
+- [ ] config: Make session layout configurable
 - [ ] config: User `config` in `~/.config/reporunner/config.json/toml` & Default Config
 - [ ] Package and global install
 
