@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const (
 	colorGreen  = "\033[0;32m"
@@ -14,6 +17,7 @@ const (
 	symbolPositive = ""
 	symbolInfo     = ""
 	symbolNegative = "󰈸"
+	symbolQuestion = ""
 )
 
 func symbol(symbol string) string {
@@ -34,4 +38,15 @@ func printNegative(message string, err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func printQuestion(message string) {
+	fmt.Printf("%s%s%s%s\n", colorOrange, symbol(symbolQuestion), message, colorReset)
+}
+
+func askForConfirmation(s string) bool {
+	var response string
+	printQuestion(fmt.Sprintf("%s (y/N): ", s))
+	fmt.Scanln(&response)
+	return strings.ToLower(response) == "y"
 }

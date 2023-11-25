@@ -38,13 +38,13 @@ func main() {
 
 	switch os.Args[1] {
 	case "--open":
-		openRepo(config)
+		openRepo(config, "")
 	case "--add":
 		cloneRepo(config, os.Args[2])
 	case "--remove":
 		removeRepo(config)
 	case "--status":
-		getStatus()
+		getStatus(config)
 	case "--help":
 		getHelp()
 	default:

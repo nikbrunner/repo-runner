@@ -5,8 +5,15 @@ import (
 	"os"
 )
 
-func openRepo(config Config) {
-	selectedRepo := selectRepo(config.ReposBasePath)
+func openRepo(config Config, repoName string) {
+	var selectedRepo string
+
+	if repoName == "" {
+		selectedRepo = selectRepo(config.ReposBasePath)
+	} else {
+		selectedRepo = repoName
+	}
+
 	sessionName := createSessionName(config.Separator, selectedRepo)
 	sessionPath := createSessionPath(config.ReposBasePath, selectedRepo)
 

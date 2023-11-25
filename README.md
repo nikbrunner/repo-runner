@@ -68,7 +68,7 @@ Basic
 - [x] `add`
 - [x] `open`
 - [x] `remove`
-- [ ] `status`
+- [x] `status`
 - [x] `help`
 
 Advanced
