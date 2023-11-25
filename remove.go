@@ -28,7 +28,7 @@ func removeRepo(config Config) {
 	}
 
 	// Check if a session exists for that repo
-	if doesSessionExist(sessionName) {
+	if sessionExists(sessionName) {
 		printPositive(fmt.Sprintf("Killing session: %s", sessionName))
 		if err := tmux("kill-session", "-t", sessionName); err != nil {
 			printNegative(fmt.Sprintf("Error killing session %s:", sessionName), err)

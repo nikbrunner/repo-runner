@@ -2,8 +2,6 @@ package main
 
 import "testing"
 
-// TestSanitizeSessionName checks if the sanitizeSessionName function
-// correctly sanitizes different strings.
 func TestSanitizeSessionName(t *testing.T) {
 	testCases := []struct {
 		name     string
@@ -19,6 +17,25 @@ func TestSanitizeSessionName(t *testing.T) {
 			sanitized := sanitizeSessionName(tc.name)
 			if sanitized != tc.expected {
 				t.Errorf("sanitizeSessionName(%s): expected: %v, got: %v", tc.name, tc.expected, sanitized)
+			}
+		})
+	}
+}
+
+func TestSanitizePath(t *testing.T) {
+	testCases := []struct {
+		path     string
+		expected string
+	}{
+		{"/home/user/repos/repo-owner/repo1", "/home/user/repos/repo-owner/repo1"},
+		{"/home/user/repos/repo-owner/repo1/", "/home/user/repos/repo-owner/repo1"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.path, func(t *testing.T) {
+			sanitized := sanitizePath(tc.path)
+			if sanitized != tc.expected {
+				t.Errorf("sanitizePath(%s): expected: %v, got: %v", tc.path, tc.expected, sanitized)
 			}
 		})
 	}
@@ -43,5 +60,25 @@ func TestCreateSesssionName(t *testing.T) {
 		if gotString != tc.wantSessionName {
 			t.Errorf("createSessionName(%s): expected: %v, got: %v", tc.repoPath, tc.wantSessionName, gotString)
 		}
+	}
+}
+
+func TestCreateSessionPath(t *testing.T) {
+	testCases := []struct {
+		basePath string
+		repoName string
+		expected string
+	}{
+		{"/home/user/repos", "repo1", "/home/user/repos/repo1"},
+		{"/home/user/repos/", "repo1", "/home/user/repos/repo1"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.basePath, func(t *testing.T) {
+			sessionPath := createSessionPath(tc.basePath, tc.repoName)
+			if sessionPath != tc.expected {
+				t.Errorf("createSessionPath(%s, %s): expected: %v, got: %v", tc.basePath, tc.repoName, tc.expected, sessionPath)
+			}
+		})
 	}
 }
