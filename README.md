@@ -74,6 +74,8 @@ Basic
 Advanced
 
 - [x] config: Make session layout configurable
+- [ ] `--reset` - `git fullreset` for picked repository
+- [ ] `--reset-all` - `git fullreset` for all repositories
 - [ ] config: User `config` in `~/.config/reporunner/config.json/toml` & Default Config
 - [ ] Package and global install
 
