@@ -1,6 +1,6 @@
-# tmux-repo-runner
+# repo-runner
 
-Repo-Runner is a CLI tool for managing Git repositories in combination with TMUX.
+`repo-runner` is a CLI tool for managing Git repositories in combination with TMUX.
 
 ## Installation
 
@@ -12,13 +12,14 @@ Repo-Runner is a CLI tool for managing Git repositories in combination with TMUX
 
 To add a new repository:
 
-Add a repository to the list of repositories to be managed by Repo-Runner.
+Add a repository to the list of repositories to be managed by `repo-runner`.
 
 ```sh
 rr --add <git-repo-url>
 ```
 
 Open the repository in a new TMUX session.
+This will let you pick a repository from the list of repositories to be managed by `repo-runner` to be opened in a new TMUX session.
 
 ```sh
 rr run . --open
@@ -59,5 +60,5 @@ Advanced
 
 Extra
 
-- [ ] Add TUI
+- [ ] Add Interface when running `rr` without flag
   - [charmbracelet/bubbles: TUI components for Bubble Tea 🫧](https://github.com/charmbracelet/bubbles/tree/master)
