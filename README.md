@@ -73,7 +73,7 @@ Basic
 
 Advanced
 
-- [ ] config: Make session layout configurable
+- [x] config: Make session layout configurable
 - [ ] config: User `config` in `~/.config/reporunner/config.json/toml` & Default Config
 - [ ] Package and global install
 
