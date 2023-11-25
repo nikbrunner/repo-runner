@@ -25,7 +25,7 @@ func openRepo(config Config) {
 			}
 		}
 	} else {
-		createSession(sessionName, sessionPath)
+		createSession(config, sessionName, sessionPath)
 
 		if inTmux {
 			printPositive(fmt.Sprintf("Switching to session: %s", sessionName))

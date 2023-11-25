@@ -2,10 +2,29 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 )
 
+func setExecutePermissions(dir string) {
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			return os.Chmod(path, 0755) // Sets the file to readable and executable by everyone
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatalf("Failed to set execute permissions: %v", err)
+	}
+}
+
 func main() {
+	setExecutePermissions("./layouts")
+
 	config, err := loadConfig()
 	if err != nil {
 		fmt.Println("Failed to load configuration: ", err)

@@ -1,4 +1,5 @@
 {
   "reposBasePath": "$HOME/Documents/dev/repos_test",
-  "separator": "__"
+  "separator": "__",
+  "layout": "default"
 }

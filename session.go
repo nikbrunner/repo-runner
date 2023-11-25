@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
-	"time"
 )
 
 func sanitizeSessionName(sessionName string) string {
@@ -40,34 +40,17 @@ func sessionExists(sessionName string) bool {
 	}
 }
 
-func createSession(sessionName, path string) {
-	printPositive(fmt.Sprintf("Creating session: %s", sessionName))
+func createSession(config Config, sessionName string, sessionPath string) {
+	args := []string{
+		fmt.Sprintf("./layouts/%s.sh", config.Layout),
+		"--sessionName", sessionName,
+		"--sessionPath", sessionPath,
+	}
 
-	if err := tmux("new-session", "-d", "-s", sessionName, "-c", path); err != nil {
-		printNegative("Error creating new tmux session:", err)
-		return
-	}
-	if err := tmux("rename-window", "-t", fmt.Sprintf("%s:1", sessionName), "code"); err != nil {
-		printNegative("Error renaming tmux window to 'code':", err)
-		return
-	}
-	if err := tmux("new-window", "-t", sessionName); err != nil {
-		printNegative("Error creating new tmux window:", err)
-		return
-	}
-	if err := tmux("rename-window", "-t", fmt.Sprintf("%s:2", sessionName), "run"); err != nil {
-		printNegative("Error renaming tmux window to 'run':", err)
-		return
-	}
-	if err := tmux("send-keys", "-t", fmt.Sprintf("%s:2", sessionName), "tmux_2x2_layout", "Enter"); err != nil {
-		printNegative("Error setting up layout:", err)
+	if err := exec.Command("/bin/bash", args...).Run(); err != nil {
+		printNegative("Error executing layout script:", err)
 		return
 	}
 
-	// Wait for tmux to create the layout and select the first window
-	time.Sleep(2 * time.Second)
-	if err := tmux("select-window", "-t", fmt.Sprintf("%s:1", sessionName)); err != nil {
-		printNegative("Error selecting first tmux window:", err)
-		return
-	}
+	printPositive("Session created")
 }
