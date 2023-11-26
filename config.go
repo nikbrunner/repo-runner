@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -8,6 +9,12 @@ import (
 )
 
 const defaultConfigFileName = "defaultConfig.json"
+
+//go:embed defaultConfig.json
+var defaultConfigFile embed.FS
+
+//go:embed layouts/default.sh
+var defaultLayoutScript string
 
 type LayoutType string
 
@@ -33,15 +40,15 @@ func validateLayout(layout LayoutType) error {
 func loadDefaultConfig() (Config, error) {
 	var defaultConfig Config
 
-	defaultConfigFile, err := os.Open(defaultConfigFileName)
+	// Read the embedded file
+	configFileData, err := defaultConfigFile.ReadFile(defaultConfigFileName)
 	if err != nil {
-		return Config{}, fmt.Errorf("error opening config file: %w", err)
+		return Config{}, fmt.Errorf("error reading embedded config file: %w", err)
 	}
-	defer defaultConfigFile.Close()
 
-	decoder := json.NewDecoder(defaultConfigFile)
-	if err := decoder.Decode(&defaultConfig); err != nil {
-		return Config{}, fmt.Errorf("error decoding config file: %w", err)
+	// Decode the configuration from the embedded file data
+	if err := json.Unmarshal(configFileData, &defaultConfig); err != nil {
+		return Config{}, fmt.Errorf("error decoding embedded config file: %w", err)
 	}
 
 	return defaultConfig, nil

@@ -4,7 +4,54 @@
 
 ## Installation
 
-(TODO Instructions on how to install and build your application.)
+To install the CLI application globally, run the following script:
+
+### Automatic installation
+
+> [!NOTE]
+>
+> The install script will install the CLI application to `/usr/local/bin/rr`. So make sure this is in your `$PATH`.
+
+> [!IMPORTANT]
+>
+> Make sure you have `go` installed on your machine.
+
+```bash
+# Clone the repository (SSH)
+git clone git@github.com:nikbrunner/repo-runner.git
+
+# `cd` into that folder
+cd repo-runner
+
+# Give the install script execution permissions
+chmod +x ./install.sh
+
+# Run the install script
+./install.sh
+
+# Check if the app is in your PATH
+which rr
+```
+
+### Manual installation
+
+> [!IMPORTANT]
+>
+> Make sure you have `go` installed on your machine.
+
+```bash
+# Clone the repository (SSH)
+git clone git@github.com:nikbrunner/repo-runner.git
+
+# `cd` into that folder
+cd repo-runner
+
+# Build the app
+go build -o rr
+
+# Move the app to your PATH
+mv rr /usr/local/bin/rr
+```
 
 ## Usage
 
@@ -78,13 +125,13 @@ go test ./...
 - [x] `help`
 - [x] Default session layout should come from config
 - [x] Improve `fzf` styling
+- [x] Global install & build script
 
 ### Next
 
-- [ ] Global install & build script
-- [ ] Improve test coverage
-- [ ] Sketch for TUI
 - [ ] `RepoRunnerGPT`
+- [ ] Sketch for TUI
+- [ ] Improve test coverage
 - [ ] `--reset` - `git fullreset` for picked repository
 - [ ] `--reset-all` - `git fullreset` for all repositories
 - [ ] config: Make session layout configurable
