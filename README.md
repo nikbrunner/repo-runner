@@ -130,6 +130,7 @@ go test ./...
 ### Next
 
 - [ ] `RepoRunnerGPT`
+- [ ] Improve `--status` performance
 - [ ] Sketch for TUI
 - [ ] Improve test coverage
 - [ ] `--reset` - `git fullreset` for picked repository

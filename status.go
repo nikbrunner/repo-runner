@@ -23,6 +23,7 @@ type RepoStatus struct {
 }
 
 func getStatus(config Config) {
+	fmt.Println("Getting status for all repositories...")
 	statuses, err := getAllReposStatus(config.ReposBasePath)
 	if err != nil {
 		fmt.Printf("Error getting statuses: %v\n", err)
@@ -66,18 +67,27 @@ func getReposWithUncommittedChanges(statuses []RepoStatus) []string {
 func getAllReposStatus(reposBasePath string) ([]RepoStatus, error) {
 	var statuses []RepoStatus
 
+	progressCounter := 0
+
 	err := filepath.Walk(reposBasePath, func(path string, info os.FileInfo, _ error) error {
 		if info.IsDir() && isGitRepo(path) {
 			status, err := getRepoStatus(path)
 			if err != nil {
-				return err
+				fmt.Printf("Error getting status for %s: %v\n", path, err)
+				return nil // Continue processing other repositories
 			}
+			progressCounter++
+			updateProgress(progressCounter)
 			statuses = append(statuses, status)
 		}
 		return nil
 	})
 
 	return statuses, err
+}
+
+func updateProgress(progressCounter int) {
+	fmt.Printf("Processed repositories: %d\r", progressCounter)
 }
 
 func isGitRepo(path string) bool {
@@ -94,43 +104,66 @@ func getRepoStatus(repoPath string) (RepoStatus, error) {
 	defer os.Chdir(oldPath)
 	os.Chdir(repoPath)
 
-	// Get branch and whether there are uncommitted changes
-	branch, err := localGit("rev-parse", "--abbrev-ref", "HEAD")
-	if err != nil {
-		return status, err
+	// Check if the repository has any commits in its history
+	if _, err := statusGitCmd(repoPath, "rev-list", "-n", "1", "--all"); err != nil {
+		// No commits in the repository's history
+		return RepoStatus{
+			Name:                  filepath.Base(repoPath),
+			Branch:                "N/A",
+			LastCommit:            LastCommit{Author: "N/A", Message: "Repository empty or not initialized", Date: "N/A"},
+			HasUncommittedChanges: false,
+		}, nil
+	}
+
+	// Attempt to get the current branch name
+	branch, branchErr := statusGitCmd(repoPath, "rev-parse", "--abbrev-ref", "HEAD")
+	if branchErr != nil {
+		// Handle the case where HEAD is ambiguous (no commits on the current branch)
+		branch = "N/A"
 	}
 	status.Branch = branch
 
 	// Check if there are uncommitted changes
-	uncommittedChanges, err := localGit("status", "--porcelain")
+	uncommittedChanges, err := statusGitCmd(repoPath, "status", "--porcelain")
 	if err != nil {
-		return status, err
+		uncommittedChanges = ""
 	}
 	status.HasUncommittedChanges = uncommittedChanges != ""
 
-	// Get Last Commit
-	lastCommit, err := localGit("log", "-1", "--pretty=format:%an|%s|%cd")
+	// Get Last Commit, handling current branch with no commits
+	lastCommit, err := statusGitCmd(repoPath, "log", "-1", `--pretty=format:%an<%s<%cd`)
 	if err != nil {
-		return status, err
+		// Current branch has no commits yet or error in getting last commit
+		status.LastCommit = LastCommit{Author: "N/A", Message: "No commits on this branch", Date: "N/A"}
+	} else {
+		// Parse Last Commit for Author, Message and Date
+		lastCommitParts := strings.Split(lastCommit, "<")
+		if len(lastCommitParts) >= 3 {
+			status.LastCommit.Author = lastCommitParts[0]
+			status.LastCommit.Message = lastCommitParts[1]
+			status.LastCommit.Date = lastCommitParts[2]
+		}
 	}
-
-	// Parse Last Commit for Author, Message and Date
-	lastCommitParts := strings.Split(lastCommit, "|")
-	status.LastCommit.Author = lastCommitParts[0]
-	status.LastCommit.Message = lastCommitParts[1]
-	status.LastCommit.Date = lastCommitParts[2]
 
 	return status, nil
 }
 
-// TODO: use `git()` from `git.go`
-func localGit(args ...string) (string, error) {
+func statusGitCmd(repoPath string, args ...string) (string, error) {
 	cmd := exec.Command("git", args...)
+	cmd.Dir = repoPath // Set the working directory to the repo path
+
+	// Create a buffer to capture standard error
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	// Execute the command
 	output, err := cmd.Output()
 	if err != nil {
-		return "", err
+		// Print the standard error output along with the error
+		return "", fmt.Errorf("command error: %v, stderr: %s", err, stderr.String())
 	}
-	return string(bytes.TrimSpace(output)), nil
+
+	return strings.TrimSpace(string(output)), nil
 }
 
 func displaySummary(statuses []RepoStatus) {
