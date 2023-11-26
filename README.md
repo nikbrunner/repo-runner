@@ -53,6 +53,12 @@ Lists all available commands and flags.
 rr --help
 ```
 
+## Testing
+
+```sh
+go test ./...
+```
+
 ## Contributing
 
 (Guidelines for contributing to the project.)
@@ -61,25 +67,29 @@ rr --help
 
 (Your chosen license or "Unlicensed" if not applicable.)
 
-## TODOS
+## ROADMAP
 
-Basic
+### Done
 
 - [x] `add`
 - [x] `open`
 - [x] `remove`
 - [x] `status`
 - [x] `help`
+- [x] Default session layout should come from config
+- [x] Improve `fzf` styling
 
-Advanced
+### Next
 
-- [x] config: Make session layout configurable
+- [ ] Global install & build script
+- [ ] Improve test coverage
+- [ ] Sketch for TUI
+- [ ] `RepoRunnerGPT`
 - [ ] `--reset` - `git fullreset` for picked repository
 - [ ] `--reset-all` - `git fullreset` for all repositories
-- [ ] config: User `config` in `~/.config/reporunner/config.json/toml` & Default Config
-- [ ] Package and global install
+- [ ] config: Make session layout configurable
+- [ ] config: Enable user config in `~/.config/reporunner/config.toml/.yml`
 
-Extra
+### Future
 
-- [ ] Add Interface when running `rr` without flag
-  - [charmbracelet/bubbles: TUI components for Bubble Tea 🫧](https://github.com/charmbracelet/bubbles/tree/master)
+- [ ] Add TUI when running `rr` without flag
