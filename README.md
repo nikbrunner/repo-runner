@@ -120,15 +120,21 @@ go test ./...
 
 - [x] `add`
 - [x] `open`
-- [x] `remove`
 - [x] `status`
 - [x] `help`
 - [x] Default session layout should come from config
 - [x] Improve `fzf` styling
 - [x] Global install & build script
+- [x] Fix Layout for `run`
 
 ### Next
 
+- [ ] Work with two folder level architecture (user/repo)
+- [ ] Fix `run` setup for client (Stil something an @ gets created?)
+- [ ] `remove`
+- [ ] General clean up & align print statements
+- [ ] Use `go install`
+- [ ] Use `gum` for user interactions
 - [ ] `RepoRunnerGPT`
 - [ ] Improve `--status` performance
 - [ ] Sketch for TUI
