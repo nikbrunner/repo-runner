@@ -32,7 +32,6 @@ func getStatus(config Config) {
 
 	if len(statuses) > 0 {
 		displaySummary(statuses)
-		displayStatuses(statuses)
 
 		reposWithUncommittedChanges := getReposWithUncommittedChanges(statuses)
 
@@ -80,6 +79,7 @@ func getAllReposStatus(reposBasePath string) ([]RepoStatus, error) {
 				fmt.Printf("Error getting status for %s: %v\n", path, err)
 				return nil // Continue processing other repositories
 			}
+			displayStatuses(statuses)
 			progressCounter++
 			updateProgress(progressCounter)
 			statuses = append(statuses, status)

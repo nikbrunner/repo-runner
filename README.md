@@ -133,14 +133,15 @@ go test ./...
 - [x] Global install & build script
 - [x] Fix Layout for `run`
 - [x] Work with two folder level architecture (user/repo)
+- [x] Incremental `--status`
 
 ### Next
 
+- [ ] Fix open repo with uncommited changes
 - [ ] Fix `run` setup for client (Stil something an @ gets created?)
-- [ ] `remove`
 - [ ] General clean up & align print statements
-- [ ] Use `go install`
-- [ ] Use `gum` for user interactions
+- [ ] `config.Editor`
+- [ ] Setup `go install`
 - [ ] `RepoRunnerGPT`
 - [ ] Improve `--status` performance
 - [ ] Sketch for TUI
