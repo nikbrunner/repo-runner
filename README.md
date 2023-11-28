@@ -60,10 +60,16 @@ mv rr /usr/local/bin/rr
 To add a new repository:
 
 Add a repository to the list of repositories to be managed by `repo-runner`.
-This command clones the given Git repository to the specified directory.
 
-```sh
+**Example:**
+
+```bash
 rr --add <git-repo-url>
+
+rr --add git@github.com:nvim-telescope/telescope.nvim.git
+
+# The repository will get cloned via the following schema: <config.RepoBasePath>/<GitHubUser>/<RepositoryName>
+# Arbitrary example for the above command: ~/repos/nvim-telescope/telescope.nvim
 ```
 
 ### Opening a Repository
@@ -126,10 +132,10 @@ go test ./...
 - [x] Improve `fzf` styling
 - [x] Global install & build script
 - [x] Fix Layout for `run`
+- [x] Work with two folder level architecture (user/repo)
 
 ### Next
 
-- [ ] Work with two folder level architecture (user/repo)
 - [ ] Fix `run` setup for client (Stil something an @ gets created?)
 - [ ] `remove`
 - [ ] General clean up & align print statements

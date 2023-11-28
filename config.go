@@ -24,7 +24,6 @@ const (
 
 type Config struct {
 	ReposBasePath string     `json:"reposBasePath"`
-	Separator     string     `json:"separator"`
 	Layout        LayoutType `json:"layout"`
 }
 
@@ -57,10 +56,6 @@ func loadDefaultConfig() (Config, error) {
 func validateConfig(config Config) error {
 	if config.ReposBasePath == "" {
 		return fmt.Errorf("reposBasePath is required")
-	}
-
-	if config.Separator == "" {
-		return fmt.Errorf("separator is required")
 	}
 
 	if config.Layout == "" {

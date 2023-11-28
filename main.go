@@ -21,7 +21,7 @@ func main() {
 	case "--open":
 		openRepo(config, "")
 	case "--add":
-		cloneRepo(config, os.Args[2])
+		addRepo(config, os.Args[2])
 	case "--remove":
 		removeRepo(config)
 	case "--status":
@@ -29,6 +29,6 @@ func main() {
 	case "--help":
 		getHelp()
 	default:
-		fmt.Println("Invalid option. Usage: repo [--open|--add|--remove|--status|--help]")
+		getHelp()
 	}
 }

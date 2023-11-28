@@ -61,12 +61,21 @@ func getClonePath(gitUrl string, config Config) string {
 		printNegative("Error parsing Git URL", err)
 	}
 
-	clonePath := fmt.Sprintf("%s/%s%s%s", config.ReposBasePath, username, config.Separator, repoName)
+	usernameDir := fmt.Sprintf("%s/%s", config.ReposBasePath, username)
+
+	// Check if the repository for the user exists
+	if directoryExists(usernameDir) {
+		printPositive(fmt.Sprintf("Directory for GitHub user '%s' found!\nAdding new repository '%s'.", username, repoName))
+	} else {
+		printPositive(fmt.Sprintf("Directory for GitHub user '%s' not found!\nCreating directory.", username))
+	}
+
+	clonePath := fmt.Sprintf("%s/%s/%s", config.ReposBasePath, username, repoName)
 
 	return clonePath
 }
 
-func cloneRepo(config Config, gitUrl string) {
+func addRepo(config Config, gitUrl string) {
 	clonePath := getClonePath(gitUrl, config)
 
 	if directoryExists(clonePath) {

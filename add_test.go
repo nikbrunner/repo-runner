@@ -88,7 +88,7 @@ func TestGetClonePath(t *testing.T) {
 		{"invalid-url", "", true},
 	}
 
-	config := Config{ReposBasePath: "/home/user/repos", Separator: "/"}
+	config := Config{ReposBasePath: "/home/user/repos"}
 
 	for _, tc := range testCases {
 		gotCloneDir := getClonePath(tc.gitUrl, config)

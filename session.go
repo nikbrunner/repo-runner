@@ -8,10 +8,10 @@ import (
 )
 
 func sanitizeSessionName(sessionName string) string {
+	// https://unix.stackexchange.com/questions/560744/create-new-session-window-name-that-contain-dot
 	return strings.NewReplacer(
 		".", "_",
 		":", "_",
-		"@", "_",
 	).Replace(sessionName)
 }
 
@@ -19,12 +19,12 @@ func sanitizePath(path string) string {
 	return strings.TrimSuffix(path, "/")
 }
 
-func createSessionName(separator string, repoPath string) string {
-	sanitizedPath := sanitizePath(repoPath)
-	parts := strings.Split(sanitizedPath, separator)
-	sessionName := parts[len(parts)-1]
+func createSessionName(repoPath string) string {
+	santizedPath := sanitizePath(repoPath)
+	repoName := strings.Split(santizedPath, "/")[len(strings.Split(santizedPath, "/"))-1]
+	santizedSessionName := sanitizeSessionName(repoName)
 
-	return sanitizeSessionName(sessionName)
+	return santizedSessionName
 }
 
 func createSessionPath(basePath, repoName string) string {
@@ -34,10 +34,10 @@ func createSessionPath(basePath, repoName string) string {
 
 func sessionExists(sessionName string) bool {
 	err := tmux("has-session", "-t", sessionName)
-	printPositive(fmt.Sprintf("Session found: %s", sessionName))
 	if err != nil {
 		return false
 	} else {
+		printPositive(fmt.Sprintf("Session found: %s", sessionName))
 		return true
 	}
 }

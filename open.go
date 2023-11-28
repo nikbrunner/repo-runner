@@ -6,16 +6,17 @@ import (
 )
 
 func openRepo(config Config, repoName string) {
+	repoBasePath := config.ReposBasePath
 	var selectedRepo string
 
 	if repoName == "" {
-		selectedRepo = selectRepo(config.ReposBasePath)
+		selectedRepo = selectRepo(repoBasePath)
 	} else {
 		selectedRepo = repoName
 	}
 
-	sessionName := createSessionName(config.Separator, selectedRepo)
-	sessionPath := createSessionPath(config.ReposBasePath, selectedRepo)
+	sessionName := createSessionName(selectedRepo)
+	sessionPath := createSessionPath(repoBasePath, selectedRepo)
 
 	inTmux := os.Getenv("TMUX") != ""
 

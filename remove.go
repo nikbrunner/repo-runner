@@ -6,9 +6,10 @@ import (
 )
 
 func removeRepo(config Config) {
-	selectedRepo := selectRepo(config.ReposBasePath)
-	sessionName := createSessionName(config.Separator, selectedRepo)
-	sessionPath := createSessionPath(config.ReposBasePath, selectedRepo)
+	repoBasePath := config.ReposBasePath
+	selectedRepo := selectRepo(repoBasePath)
+	sessionName := createSessionName(selectedRepo)
+	sessionPath := createSessionPath(repoBasePath, selectedRepo)
 
 	// Ask the user to confirm
 	printInfo(fmt.Sprintf("Are you sure you want to remove %s? [y/N]", sessionPath))
@@ -19,7 +20,7 @@ func removeRepo(config Config) {
 		return
 	}
 
-	// Remove the dirdctory
+	// Remove the directory
 	if err := os.RemoveAll(sessionPath); err != nil {
 		printNegative("Error removing session", err)
 		return

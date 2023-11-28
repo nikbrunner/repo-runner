@@ -34,10 +34,14 @@ func getStatus(config Config) {
 		displaySummary(statuses)
 		displayStatuses(statuses)
 
-		if askForConfirmation("Open repositories with uncommitted changes?") {
-			selectedRepo := fzf(getReposWithUncommittedChanges(statuses), "Select repository: ")
-			openRepo(config, selectedRepo)
-		} else if askForConfirmation("Open any other repository?") {
+		reposWithUncommittedChanges := getReposWithUncommittedChanges(statuses)
+
+		if len(reposWithUncommittedChanges) > 0 {
+			if askForConfirmation("Open repositories with uncommitted changes?") {
+				selectedRepo := fzf(getReposWithUncommittedChanges(statuses), "Select repository: ")
+				openRepo(config, selectedRepo)
+			}
+		} else if askForConfirmation("Open any repository?") {
 			openRepo(config, "")
 		} else {
 			printInfo("No repositories opened")
