@@ -7,9 +7,10 @@ import (
 )
 
 func selectRepo(repoBasePath string) string {
+	log := NewLogUtil()
 	repos, err := getRepos(repoBasePath)
 	if err != nil {
-		printNegative("Error getting repositories: %s", err)
+		log.Negative("Error getting repositories: %s", err)
 		os.Exit(1)
 	}
 

@@ -8,6 +8,7 @@ import (
 )
 
 func createSession(config Config, sessionName string, sessionPath string) {
+	log := NewLogUtil()
 	cmd := exec.Command("/bin/bash", "-s")
 
 	// Set environment variables for the script
@@ -20,16 +21,16 @@ func createSession(config Config, sessionName string, sessionPath string) {
 		cmd.Stdin = strings.NewReader(defaultLayoutScript)
 		cmd.Stderr = os.Stderr
 	} else {
-		printNegative(fmt.Sprintf("Invalid layout: %s", config.Layout), nil)
+		log.Negative(fmt.Sprintf("Invalid layout: %s", config.Layout), nil)
 		return
 	}
 
 	if err := cmd.Run(); err != nil {
-		printNegative("Error executing layout script:", err)
+		log.Negative("Error executing layout script:", err)
 		return
 	}
 
-	printPositive(fmt.Sprintf("Created session: %s", sessionName))
+	log.Positive(fmt.Sprintf("Created session: %s", sessionName))
 }
 
 func createSessionName(repoPath string) string {
@@ -54,11 +55,12 @@ func createSessionPath(basePath, repoName string) string {
 }
 
 func sessionExists(sessionName string) bool {
+	log := NewLogUtil()
 	err := tmux("has-session", "-t", sessionName)
 	if err != nil {
 		return false
 	} else {
-		printPositive(fmt.Sprintf("Session found: %s", sessionName))
+		log.Positive(fmt.Sprintf("Session found: %s", sessionName))
 		return true
 	}
 }

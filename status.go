@@ -21,10 +21,12 @@ type RepoStatus struct {
 }
 
 func getStatus(config Config) {
-	fmt.Println("Getting status for all repositories...")
+	log := NewLogUtil()
+
+	log.Info("Getting status for all repositories...")
 	statuses, err := getAllReposStatus(config.ReposBasePath)
 	if err != nil {
-		fmt.Printf("Error getting statuses: %v\n", err)
+		log.Negative("Error getting statuses: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -32,17 +34,17 @@ func getStatus(config Config) {
 		displaySummary(statuses)
 
 		if len(getReposWithUncommittedChanges(statuses)) > 0 {
-			if askForConfirmation("Open repositories with uncommitted changes?") {
+			if log.Ask("Open repositories with uncommitted changes?") {
 				selectedRepo := selectRepo(config.ReposBasePath)
 				openRepo(config, selectedRepo)
 			}
-		} else if askForConfirmation("Open any repository?") {
+		} else if log.Ask("Open any repository?") {
 			openRepo(config, "")
 		} else {
-			printInfo("No repositories opened")
+			log.Info("No repositories opened")
 		}
 	} else {
-		printInfo("No repositories found")
+		log.Info("No repositories found")
 	}
 }
 
@@ -64,6 +66,7 @@ func getReposWithUncommittedChanges(statuses []RepoStatus) []string {
 }
 
 func getAllReposStatus(reposBasePath string) ([]RepoStatus, error) {
+	log := NewLogUtil()
 	var statuses []RepoStatus
 
 	progressCounter := 0
@@ -72,7 +75,7 @@ func getAllReposStatus(reposBasePath string) ([]RepoStatus, error) {
 		if info.IsDir() && isGitRepo(path) {
 			status, err := getRepoStatus(path)
 			if err != nil {
-				fmt.Printf("Error getting status for %s: %v\n", path, err)
+				log.Negative(fmt.Sprintf("Error getting status for %s: ", path), err)
 				return nil // Continue processing other repositories
 			}
 			displayStatuses(statuses)
@@ -87,7 +90,8 @@ func getAllReposStatus(reposBasePath string) ([]RepoStatus, error) {
 }
 
 func updateProgress(progressCounter int) {
-	fmt.Printf("Processed repositories: %d\r", progressCounter)
+	log := NewLogUtil()
+	log.Info(fmt.Sprintf("Processed repositories: %d\r", progressCounter))
 }
 
 func isGitRepo(path string) bool {
@@ -149,7 +153,8 @@ func getRepoStatus(repoPath string) (RepoStatus, error) {
 }
 
 func displaySummary(statuses []RepoStatus) {
-	printInfo(fmt.Sprintf("Number of repositories: %d\n", len(statuses)))
+	log := NewLogUtil()
+	log.Info(fmt.Sprintf("Number of repositories: %d\n", len(statuses)))
 }
 
 func displayStatuses(statuses []RepoStatus) {

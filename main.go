@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"os"
 )
 
 func main() {
+	log := NewLogUtil()
 	config, err := loadConfig()
 	if err != nil {
-		fmt.Println("Failed to load configuration: ", err)
+		log.Negative("Failed to load configuration: ", err)
 		os.Exit(1)
 	}
 

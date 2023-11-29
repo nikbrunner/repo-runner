@@ -7,6 +7,8 @@ import (
 )
 
 func fzf(list []string, prompt string) string {
+	log := NewLogUtil()
+
 	// Define the color scheme (See tmux manual for --color)
 	colorComponents := []string{
 		"fg:white",
@@ -47,13 +49,13 @@ func fzf(list []string, prompt string) string {
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
-		printNegative("Error running fzf:", err)
+		log.Negative("Error running fzf:", err)
 		os.Exit(1)
 	}
 
 	selectedRepo := strings.TrimSpace(string(out))
 	if selectedRepo == "" {
-		printNegative("No repository selected", nil)
+		log.Negative("No repository selected", nil)
 		os.Exit(1)
 	}
 

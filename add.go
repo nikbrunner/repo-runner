@@ -7,40 +7,43 @@ import (
 
 func addRepo(config Config, gitUrl string) {
 	clonePath := getClonePath(gitUrl, config)
+	log := NewLogUtil()
 
 	if directoryExists(clonePath) {
-		printNegative("Directory already exists!", nil)
+		log.Negative("Directory already exists!", nil)
 		return
 	}
 
-	printPositive("Cloning repository...")
+	log.Positive("Cloning repository...")
 
 	if err := git("clone", gitUrl, clonePath); err != nil {
-		printNegative("Error cloning repository:", err)
+		log.Negative("Error cloning repository:", err)
 		return
 	}
 
-	printPositive("Repository cloned successfully")
+	log.Positive("Repository cloned successfully")
 }
 
 func getClonePath(gitUrl string, config Config) string {
+	log := NewLogUtil()
+
 	if !isValidGitUrl(gitUrl) {
-		printNegative("Invalid Git URL", nil)
+		log.Negative("Invalid Git URL", nil)
 		return ""
 	}
 
 	username, repoName, err := parseGitUrl(gitUrl)
 	if err != nil {
-		printNegative("Error parsing Git URL", err)
+		log.Negative("Error parsing Git URL", err)
 	}
 
 	usernameDir := fmt.Sprintf("%s/%s", config.ReposBasePath, username)
 
 	// Check if the repository for the user exists
 	if directoryExists(usernameDir) {
-		printPositive(fmt.Sprintf("Directory for GitHub user '%s' found!\nAdding new repository '%s'.", username, repoName))
+		log.Positive(fmt.Sprintf("Directory for GitHub user '%s' found!\nAdding new repository '%s'.", username, repoName))
 	} else {
-		printPositive(fmt.Sprintf("Directory for GitHub user '%s' not found!\nCreating directory.", username))
+		log.Positive(fmt.Sprintf("Directory for GitHub user '%s' not found!\nCreating directory.", username))
 	}
 
 	clonePath := fmt.Sprintf("%s/%s/%s", config.ReposBasePath, username, repoName)

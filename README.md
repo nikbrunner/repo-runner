@@ -135,10 +135,11 @@ go test ./...
 - [x] Work with two folder level architecture (user/repo)
 - [x] Incremental `--status`
 - [x] Fix open repo with uncommited changes
+- [x] General clean up & improve test coverage
+- [x] Improve logging
 
 ### Next
 
-- [ ] General clean up & improve test coverage
 - [ ] Flag Shorthands
 - [ ] config: User Config
 - [ ] config: `config.Editor`

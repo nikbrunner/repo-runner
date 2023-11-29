@@ -86,10 +86,12 @@ func validateLayout(layout LayoutType) error {
 }
 
 func expandPath(path string) string {
+	log := NewLogUtil()
+
 	if strings.Contains(path, "$HOME") {
 		home, err := os.UserHomeDir()
 		if err != nil {
-			printNegative("Error getting home directory:", err)
+			log.Negative("Error getting home directory:", err)
 			return ""
 		}
 		return strings.Replace(path, "$HOME", home, 1)
