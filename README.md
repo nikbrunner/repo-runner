@@ -134,11 +134,10 @@ go test ./...
 - [x] Fix Layout for `run`
 - [x] Work with two folder level architecture (user/repo)
 - [x] Incremental `--status`
+- [x] Fix open repo with uncommited changes
 
 ### Next
 
-- [ ] Fix open repo with uncommited changes
-- [ ] Fix `run` setup for client (Stil something an @ gets created?)
 - [ ] General clean up & align print statements
 - [ ] `config.Editor`
 - [ ] Setup `go install`
