@@ -6,6 +6,16 @@ import (
 	"path/filepath"
 )
 
+func selectRepo(repoBasePath string) string {
+	repos, err := getRepos(repoBasePath)
+	if err != nil {
+		printNegative("Error getting repositories: %s", err)
+		os.Exit(1)
+	}
+
+	return fzf(repos, "Select repository: ")
+}
+
 func getRepos(repoBasePath string) ([]string, error) {
 	usernames, err := readDirs(repoBasePath)
 	if err != nil {
@@ -27,30 +37,4 @@ func getRepos(repoBasePath string) ([]string, error) {
 	}
 
 	return repos, nil
-}
-
-func readDirs(path string) ([]string, error) {
-	entries, err := os.ReadDir(path)
-	if err != nil {
-		return nil, err
-	}
-
-	var dirs []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			dirs = append(dirs, entry.Name())
-		}
-	}
-
-	return dirs, nil
-}
-
-func selectRepo(repoBasePath string) string {
-	repos, err := getRepos(repoBasePath)
-	if err != nil {
-		printNegative("Error getting repositories: %s", err)
-		os.Exit(1)
-	}
-
-	return fzf(repos, "Select repository: ")
 }

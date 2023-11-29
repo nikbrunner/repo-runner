@@ -7,41 +7,6 @@ import (
 	"strings"
 )
 
-func sanitizeSessionName(sessionName string) string {
-	// https://unix.stackexchange.com/questions/560744/create-new-session-window-name-that-contain-dot
-	return strings.NewReplacer(
-		".", "_",
-		":", "_",
-	).Replace(sessionName)
-}
-
-func sanitizePath(path string) string {
-	return strings.TrimSuffix(path, "/")
-}
-
-func createSessionName(repoPath string) string {
-	santizedPath := sanitizePath(repoPath)
-	repoName := strings.Split(santizedPath, "/")[len(strings.Split(santizedPath, "/"))-1]
-	santizedSessionName := sanitizeSessionName(repoName)
-
-	return santizedSessionName
-}
-
-func createSessionPath(basePath, repoName string) string {
-	sanitizedPath := sanitizePath(basePath)
-	return fmt.Sprintf("%s/%s", sanitizedPath, repoName)
-}
-
-func sessionExists(sessionName string) bool {
-	err := tmux("has-session", "-t", sessionName)
-	if err != nil {
-		return false
-	} else {
-		printPositive(fmt.Sprintf("Session found: %s", sessionName))
-		return true
-	}
-}
-
 func createSession(config Config, sessionName string, sessionPath string) {
 	cmd := exec.Command("/bin/bash", "-s")
 
@@ -65,4 +30,35 @@ func createSession(config Config, sessionName string, sessionPath string) {
 	}
 
 	printPositive(fmt.Sprintf("Created session: %s", sessionName))
+}
+
+func createSessionName(repoPath string) string {
+	santizedPath := sanitizePath(repoPath)
+	repoName := strings.Split(santizedPath, "/")[len(strings.Split(santizedPath, "/"))-1]
+	santizedSessionName := sanitizeSessionName(repoName)
+
+	return santizedSessionName
+}
+
+func sanitizeSessionName(sessionName string) string {
+	// https://unix.stackexchange.com/questions/560744/create-new-session-window-name-that-contain-dot
+	return strings.NewReplacer(
+		".", "_",
+		":", "_",
+	).Replace(sessionName)
+}
+
+func createSessionPath(basePath, repoName string) string {
+	sanitizedPath := sanitizePath(basePath)
+	return fmt.Sprintf("%s/%s", sanitizedPath, repoName)
+}
+
+func sessionExists(sessionName string) bool {
+	err := tmux("has-session", "-t", sessionName)
+	if err != nil {
+		return false
+	} else {
+		printPositive(fmt.Sprintf("Session found: %s", sessionName))
+		return true
+	}
 }

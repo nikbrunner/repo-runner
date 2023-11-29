@@ -27,13 +27,20 @@ type Config struct {
 	Layout        LayoutType `json:"layout"`
 }
 
-func validateLayout(layout LayoutType) error {
-	switch layout {
-	case LayoutDefault:
-		return nil
-	default:
-		return fmt.Errorf(fmt.Sprintf("invalid layout: '%s'", layout))
+func loadConfig() (Config, error) {
+	defaultConfig, defaultConfigErr := loadDefaultConfig()
+	if defaultConfigErr != nil {
+		return Config{}, fmt.Errorf("error loading default config: %w", defaultConfigErr)
 	}
+
+	validationErr := validateConfig(defaultConfig)
+	if validationErr != nil {
+		return Config{}, fmt.Errorf("error validating default config: %w", validationErr)
+	}
+
+	defaultConfig.ReposBasePath = expandPath(defaultConfig.ReposBasePath)
+
+	return defaultConfig, nil
 }
 
 func loadDefaultConfig() (Config, error) {
@@ -69,7 +76,15 @@ func validateConfig(config Config) error {
 	return nil
 }
 
-// Expand $HOME in the path
+func validateLayout(layout LayoutType) error {
+	switch layout {
+	case LayoutDefault:
+		return nil
+	default:
+		return fmt.Errorf(fmt.Sprintf("invalid layout: '%s'", layout))
+	}
+}
+
 func expandPath(path string) string {
 	if strings.Contains(path, "$HOME") {
 		home, err := os.UserHomeDir()
@@ -80,20 +95,4 @@ func expandPath(path string) string {
 		return strings.Replace(path, "$HOME", home, 1)
 	}
 	return path
-}
-
-func loadConfig() (Config, error) {
-	defaultConfig, defaultConfigErr := loadDefaultConfig()
-	if defaultConfigErr != nil {
-		return Config{}, fmt.Errorf("error loading default config: %w", defaultConfigErr)
-	}
-
-	validationErr := validateConfig(defaultConfig)
-	if validationErr != nil {
-		return Config{}, fmt.Errorf("error validating default config: %w", validationErr)
-	}
-
-	defaultConfig.ReposBasePath = expandPath(defaultConfig.ReposBasePath)
-
-	return defaultConfig, nil
 }

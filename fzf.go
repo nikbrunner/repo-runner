@@ -8,7 +8,21 @@ import (
 
 func fzf(list []string, prompt string) string {
 	// Define the color scheme (See tmux manual for --color)
-	colorScheme := "fg:white,fg+:yellow,bg+:-1,gutter:-1,hl+:magenta,border:yellow,prompt:cyan,pointer:yellow,marker:cyan,spinner:green,header:blue,label:yellow,query:magenta"
+	colorComponents := []string{
+		"fg:white",
+		"fg+:yellow",
+		"bg+:-1",
+		"gutter:-1",
+		"hl+:magenta",
+		"border:yellow",
+		"prompt:cyan",
+		"pointer:yellow",
+		"marker:cyan",
+		"spinner:green",
+		"header:blue",
+		"label:yellow",
+		"query:magenta",
+	}
 
 	args := []string{
 		"--reverse",
@@ -20,7 +34,7 @@ func fzf(list []string, prompt string) string {
 		"--border-label-pos=3",
 		"--prompt", prompt,
 		"--padding", "1,5",
-		"--color", colorScheme,
+		"--color", strings.Join(colorComponents, ","),
 	}
 
 	cmd := exec.Command("fzf", args...)
@@ -29,9 +43,9 @@ func fzf(list []string, prompt string) string {
 	preparedList := strings.Join(list, "\n")
 	cmd.Stdin = strings.NewReader(preparedList)
 
-	cmd.Stderr = os.Stderr // Connect fzf stderr to os.Stderr
+	// Handle errors
+	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
-	// TODO: handle interrupt signal
 	if err != nil {
 		printNegative("Error running fzf:", err)
 		os.Exit(1)

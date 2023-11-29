@@ -138,18 +138,21 @@ go test ./...
 
 ### Next
 
-- [ ] General clean up & align print statements
-- [ ] `config.Editor`
+- [ ] General clean up & improve test coverage
+- [ ] Flag Shorthands
+- [ ] config: User Config
+- [ ] config: `config.Editor`
+- [ ] config: `config.ManagedRepos` (Working Title)
 - [ ] Setup `go install`
-- [ ] `RepoRunnerGPT`
+- [ ] Merge `git()` functions
 - [ ] Improve `--status` performance
+- [ ] Handle interrupt signal
 - [ ] Sketch for TUI
-- [ ] Improve test coverage
 - [ ] `--reset` - `git fullreset` for picked repository
 - [ ] `--reset-all` - `git fullreset` for all repositories
-- [ ] config: Make session layout configurable
-- [ ] config: Enable user config in `~/.config/reporunner/config.toml/.yml`
+- [ ] config: More options for `config.Layouts`
 
 ### Future
 
+- [ ] AI (Diff & Summary)
 - [ ] Add TUI when running `rr` without flag
