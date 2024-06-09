@@ -18,19 +18,17 @@ tmux new-window -t "$sessionName" -c "$sessionPath"
 # Rename the second window to "run"
 tmux rename-window -t "${sessionName}:2" "run"
 
+# Create a third window in the same path
+tmux new-window -t "$sessionName" -c "$sessionPath"
+
+# Rename the second window to "server"
+tmux rename-window -t "${sessionName}:3" "server"
+
 # Split the window into two equal vertical panes
-tmux split-window -h -t "${sessionName}:2" -c "$sessionPath"
-
-# Select the first pane (now pane 1) and split it into two horizontal panes
-tmux select-pane -t "${sessionName}:2.1"
-tmux split-window -v -t "${sessionName}:2" -c "$sessionPath"
-
-# Select the second pane (originally, now pane 2) and split it into two horizontal panes
-tmux select-pane -t "${sessionName}:2.2"
-tmux split-window -v -t "${sessionName}:2" -c "$sessionPath"
+tmux split-window -h -t "${sessionName}:3" -c "$sessionPath"
 
 # Distribute all panes evenly
-tmux select-layout -t "${sessionName}:2" tiled
+tmux select-layout -t "${sessionName}:3" even-horizontal
 
 # Send 'nvm use' and 'clear' to each pane
 for pane in $(tmux list-panes -F '#P' -t "${sessionName}:2"); do
