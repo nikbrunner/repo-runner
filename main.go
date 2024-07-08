@@ -13,7 +13,7 @@ func main() {
 	}
 
 	if len(os.Args) < 2 {
-		getHelp()
+		openRepo(config, "")
 		return
 	}
 
@@ -29,6 +29,6 @@ func main() {
 	case "--help":
 		getHelp()
 	default:
-		getHelp()
+		openRepo(config, "")
 	}
 }
