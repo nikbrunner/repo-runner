@@ -2,28 +2,35 @@ package main
 
 import (
 	"fmt"
-	"os"
+	// "os"
 	"os/exec"
 	"strings"
 )
 
-func createSession(config Config, sessionName string, sessionPath string) {
+// TODO: Should call an optional layout script if the user has defined one in the config file
+// I will leave this commented out for now, just for reference
+func createSession(_ Config, sessionName string, sessionPath string) {
 	log := NewLogUtil()
-	cmd := exec.Command("/bin/bash", "-s")
+	// cmd := exec.Command("/bin/bash", "-s")
+
+	// Create session alone with no layout at first
+	cmd := exec.Command("tmux", "new-session", "-d", "-s", sessionName, "-c", sessionPath)
+
+	// TODO: If a layout is specified, use it
 
 	// Set environment variables for the script
-	cmd.Env = append(os.Environ(),
-		fmt.Sprintf("SESSION_NAME=%s", sessionName),
-		fmt.Sprintf("SESSION_PATH=%s", sessionPath),
-	)
+	// cmd.Env = append(os.Environ(),
+	// 	fmt.Sprintf("SESSION_NAME=%s", sessionName),
+	// 	fmt.Sprintf("SESSION_PATH=%s", sessionPath),
+	// )
 
-	if config.Layout == LayoutDefault {
-		cmd.Stdin = strings.NewReader(defaultLayoutScript)
-		cmd.Stderr = os.Stderr
-	} else {
-		log.Negative(fmt.Sprintf("Invalid layout: %s", config.Layout), nil)
-		return
-	}
+	// if config.Layout == LayoutDefault {
+	// 	cmd.Stdin = strings.NewReader(defaultLayoutScript)
+	// 	cmd.Stderr = os.Stderr
+	// } else {
+	// 	log.Negative(fmt.Sprintf("Invalid layout: %s", config.Layout), nil)
+	// 	return
+	// }
 
 	if err := cmd.Run(); err != nil {
 		log.Negative("Error executing layout script:", err)
