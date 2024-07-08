@@ -140,6 +140,8 @@ go test ./...
 
 ### Next
 
+- [ ] Replace predefined layouts with custom bash script which a user can define and run on a session
+  - https://github.com/joshmedeski/sesh?tab=readme-ov-file#startup-script
 - [ ] Flag Shorthands
 - [ ] config: User Config
 - [ ] config: `config.Editor`
