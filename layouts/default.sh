@@ -3,9 +3,6 @@
 sessionName=$SESSION_NAME
 sessionPath=$SESSION_PATH
 
-# Create a new tmux session
-tmux new-session -d -s "$sessionName" -c "$sessionPath"
-
 # Rename the first window to "code"
 tmux rename-window -t "${sessionName}:1" "code"
 
@@ -32,7 +29,7 @@ tmux select-layout -t "${sessionName}:3" even-horizontal
 
 # Send 'nvm use' and 'clear' to each pane
 for pane in $(tmux list-panes -F '#P' -t "${sessionName}:2"); do
-	tmux send-keys -t "${sessionName}:2.$pane" "nvm use" Enter clear Enter
+    tmux send-keys -t "${sessionName}:2.$pane" "nvm use" Enter clear Enter
 done
 
 # Select the first pane (now pane 1)
