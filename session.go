@@ -42,8 +42,14 @@ func createSession(_ Config, sessionName string, sessionPath string) {
 
 func createSessionName(repoPath string) string {
 	santizedPath := sanitizePath(repoPath)
+
+	// From the repo path take the username + the repository name
+	userName := strings.Split(santizedPath, "/")[len(strings.Split(santizedPath, "/"))-2]
 	repoName := strings.Split(santizedPath, "/")[len(strings.Split(santizedPath, "/"))-1]
-	santizedSessionName := sanitizeSessionName(repoName)
+
+	// puth the username in front of the repo name
+	sessionName := fmt.Sprintf("%s_%s", userName, repoName)
+	santizedSessionName := sanitizeSessionName(sessionName)
 
 	return santizedSessionName
 }
