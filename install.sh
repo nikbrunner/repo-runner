@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 APPLICATION_NAME="rr"
-INSTALL_PATH="/usr/local/bin"
+INSTALL_PATH="/Users/nbr/.local/bin/"
 LAYOUTS_DIR="layouts"
 
 GREEN='\033[0;32m'
